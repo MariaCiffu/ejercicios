@@ -78,12 +78,19 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                     .descripcion(request.getDescripcion())
                     .build();
 
-            // Asociar cada DatosPizarra con el Ejercicio y agregarlos al Ejercicio
             Set<DatosPizarra> datosPizarraSet = request.getDatosPizarra().stream()
-                    .peek(datosPizarra -> datosPizarra.setEjercicio(ejercicio))
+                    .map(datosPizarraDto -> {
+                        DatosPizarra datosPizarra = new DatosPizarra();
+                        datosPizarra.setTipo(datosPizarraDto.getTipo());
+                        datosPizarra.setNombre(datosPizarraDto.getNombre());
+                        datosPizarra.setX(datosPizarraDto.getX());
+                        datosPizarra.setY(datosPizarraDto.getY());
+                        datosPizarra.setEjercicio(ejercicio);
+                        return datosPizarra;
+                    })
                     .collect(Collectors.toSet());
-            ejercicio.setDatosPizarra(datosPizarraSet);
 
+            ejercicio.setDatosPizarra(datosPizarraSet);
             return repository.save(ejercicio);
         } else {
             return null;

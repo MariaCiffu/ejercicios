@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "datosPizarra")
 @Getter
 @Setter
@@ -18,7 +19,6 @@ public class DatosPizarra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "tipo")
@@ -37,4 +37,24 @@ public class DatosPizarra {
     @JoinColumn(name = "ejercicio_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Ejercicio ejercicio;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DatosPizarra that = (DatosPizarra) o;
+        if (id == null || that.id == null) {
+            return Objects.equals(tipo, that.tipo) &&
+                    Objects.equals(nombre, that.nombre) &&
+                    Objects.equals(x, that.x) &&
+                    Objects.equals(y, that.y);
+        }
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id == null ? Objects.hash(tipo, nombre, x, y) : Objects.hash(id);
+    }
+
 }

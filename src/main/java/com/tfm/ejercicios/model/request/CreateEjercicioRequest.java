@@ -1,6 +1,7 @@
 package com.tfm.ejercicios.model.request;
 
 import com.tfm.ejercicios.model.pojo.DatosPizarra;
+import com.tfm.ejercicios.model.pojo.DatosPizarraDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,5 @@ public class CreateEjercicioRequest {
 
     private String descripcion;
 
-    private Set<DatosPizarra> datosPizarra;
+    private Set<DatosPizarraDto> datosPizarra;
 }
