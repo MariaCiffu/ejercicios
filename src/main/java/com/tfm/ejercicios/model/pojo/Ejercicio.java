@@ -51,16 +51,5 @@ public class Ejercicio {
         this.duracion = ejercicioDto.getDuracion();
         this.unidadesDuracion = ejercicioDto.getUnidadesDuracion();
         this.descripcion = ejercicioDto.getDescripcion();
-
-        this.datosPizarra.clear(); // Limpiar la colección actual
-        ejercicioDto.getDatosPizarra().forEach(datosPizarraDto -> {
-            DatosPizarra nuevosDatosPizarra = new DatosPizarra();
-            nuevosDatosPizarra.setTipo(datosPizarraDto.getTipo());
-            nuevosDatosPizarra.setNombre(datosPizarraDto.getNombre());
-            nuevosDatosPizarra.setX(datosPizarraDto.getX());
-            nuevosDatosPizarra.setY(datosPizarraDto.getY());
-            nuevosDatosPizarra.setEjercicio(this); // Asocia los DatosPizarra con el Ejercicio actual
-            this.datosPizarra.add(nuevosDatosPizarra);
-        });
     }
 }

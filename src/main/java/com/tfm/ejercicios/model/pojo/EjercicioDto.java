@@ -1,6 +1,8 @@
 package com.tfm.ejercicios.model.pojo;
 
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,5 +27,5 @@ public class EjercicioDto {
 
     private String descripcion;
 
-    private Set<DatosPizarra> datosPizarra;
+    private List<DatosPizarraDto> datosPizarra;
 }

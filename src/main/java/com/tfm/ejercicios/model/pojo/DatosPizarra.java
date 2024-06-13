@@ -37,4 +37,11 @@ public class DatosPizarra {
     @JoinColumn(name = "ejercicio_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Ejercicio ejercicio;
+
+    public void update(DatosPizarraDto datosPizarraDto) {
+        this.tipo = datosPizarraDto.getTipo();
+        this.nombre = datosPizarraDto.getNombre();
+        this.x = datosPizarraDto.getX();
+        this.y = datosPizarraDto.getY();
+    }
 }

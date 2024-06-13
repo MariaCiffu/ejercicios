@@ -1,8 +1,11 @@
 package com.tfm.ejercicios.controller;
 
+import com.tfm.ejercicios.model.pojo.DatosPizarra;
+import com.tfm.ejercicios.model.pojo.DatosPizarraDto;
 import com.tfm.ejercicios.model.pojo.Ejercicio;
 import com.tfm.ejercicios.model.pojo.EjercicioDto;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
+import com.tfm.ejercicios.service.DatosPizarraServiceImpl;
 import com.tfm.ejercicios.service.EjerciciosService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +29,8 @@ import java.util.Map;
 @Tag(name = "Ejercicios Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre ejercicios alojados en una base de datos en memoria.")
 public class EjerciciosController {
     private final EjerciciosService service;
+
+    private final DatosPizarraServiceImpl serviceDatosPizarra;
 
     @GetMapping("/ejercicios")
     @Operation(
@@ -146,9 +151,15 @@ public class EjerciciosController {
             description = "Ejercicio no encontrado.")
     public ResponseEntity<Ejercicio> updateEjercicio(@PathVariable String ejercicioId, @RequestBody EjercicioDto body) {
 
-        Ejercicio updated = service.updateEjercicio(ejercicioId, body);
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
+        Ejercicio updatedEjercicio = service.updateEjercicio(ejercicioId, body);
+        if (body.getDatosPizarra() != null) {
+            List<DatosPizarraDto> nuevosDatos = body.getDatosPizarra();
+            for (int i = 0; i < updatedEjercicio.getDatosPizarra().size(); i ++){
+                serviceDatosPizarra.updateDatosPizarra(updatedEjercicio.getDatosPizarra().get(i).getId(), nuevosDatos.get(i));
+            }
+        }
+        if (updatedEjercicio != null) {
+            return ResponseEntity.ok(updatedEjercicio);
         } else {
             return ResponseEntity.notFound().build();
         }
