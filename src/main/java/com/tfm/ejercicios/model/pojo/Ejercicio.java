@@ -1,14 +1,12 @@
 package com.tfm.ejercicios.model.pojo;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "ejercicios")
 @Getter
 @Setter
@@ -19,7 +17,6 @@ import java.util.Set;
 public class Ejercicio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "imagen")
@@ -44,7 +41,7 @@ public class Ejercicio {
     private String descripcion;
 
     @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DatosPizarra> datosPizarra = new HashSet<>();
+    List<DatosPizarra> datosPizarra = new ArrayList<>();
 
     public void update(EjercicioDto ejercicioDto) {
         this.imagen = ejercicioDto.getImagen();

@@ -10,6 +10,10 @@ import com.tfm.ejercicios.model.pojo.DatosPizarra;
 import com.tfm.ejercicios.model.pojo.Ejercicio;
 import com.tfm.ejercicios.model.pojo.EjercicioDto;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,42 +63,44 @@ public class EjerciciosServiceImpl implements EjerciciosService {
     @Override
     public Ejercicio createEjercicio(CreateEjercicioRequest request) {
 
-        //Otra opcion: Jakarta Validation: https://www.baeldung.com/java-validation
-        if (request != null && StringUtils.hasLength(request.getImagen().trim())
-                && StringUtils.hasLength(request.getNombre().trim())
-                && StringUtils.hasLength(request.getTipo().trim())
-                && StringUtils.hasLength(request.getObjetivo().trim())
-                && StringUtils.hasLength(request.getDuracion().trim())
-                && StringUtils.hasLength(request.getUnidadesDuracion().trim())
-                && StringUtils.hasLength(request.getDescripcion().trim())) {
-
-            Ejercicio ejercicio = Ejercicio.builder()
-                    .imagen(request.getImagen())
-                    .nombre(request.getNombre())
-                    .tipo(request.getTipo())
-                    .objetivo(request.getObjetivo())
-                    .duracion(request.getDuracion())
-                    .unidadesDuracion(request.getUnidadesDuracion())
-                    .descripcion(request.getDescripcion())
-                    .build();
-
-            Set<DatosPizarra> datosPizarraSet = request.getDatosPizarra().stream()
-                    .map(datosPizarraDto -> {
-                        DatosPizarra datosPizarra = new DatosPizarra();
-                        datosPizarra.setTipo(datosPizarraDto.getTipo());
-                        datosPizarra.setNombre(datosPizarraDto.getNombre());
-                        datosPizarra.setX(datosPizarraDto.getX());
-                        datosPizarra.setY(datosPizarraDto.getY());
-                        datosPizarra.setEjercicio(ejercicio);
-                        return datosPizarra;
-                    })
-                    .collect(Collectors.toSet());
-
-            ejercicio.setDatosPizarra(datosPizarraSet);
-            return repository.save(ejercicio);
-        } else {
+        if (request == null) {
             return null;
         }
+
+        // Validación de los campos del request usando Jakarta Bean Validation
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<CreateEjercicioRequest>> violations = validator.validate(request);
+
+        if (!violations.isEmpty()) {
+            return null;
+        }
+
+        // Crear y guardar el Ejercicio
+        Ejercicio ejercicio = Ejercicio.builder()
+                .imagen(request.getImagen())
+                .nombre(request.getNombre())
+                .tipo(request.getTipo())
+                .objetivo(request.getObjetivo())
+                .duracion(request.getDuracion())
+                .unidadesDuracion(request.getUnidadesDuracion())
+                .descripcion(request.getDescripcion())
+                .build();
+
+        // Asociar y guardar los DatosPizarra
+        ejercicio.setDatosPizarra(request.getDatosPizarra().stream()
+                .map(datosPizarraDto -> {
+                    return DatosPizarra.builder()
+                            .tipo(datosPizarraDto.getTipo())
+                            .nombre(datosPizarraDto.getNombre())
+                            .x(datosPizarraDto.getX())
+                            .y(datosPizarraDto.getY())
+                            .ejercicio(ejercicio)
+                            .build();
+                })
+                .collect(Collectors.toList()));
+
+        return repository.save(ejercicio);
     }
 
     @Override
