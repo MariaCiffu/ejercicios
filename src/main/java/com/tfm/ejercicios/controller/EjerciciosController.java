@@ -151,13 +151,27 @@ public class EjerciciosController {
             description = "Ejercicio no encontrado.")
     public ResponseEntity<Ejercicio> updateEjercicio(@PathVariable String ejercicioId, @RequestBody EjercicioDto body) {
 
-        Ejercicio updatedEjercicio = service.updateEjercicio(ejercicioId, body);
-        if (body.getDatosPizarra() != null) {
+        Ejercicio ejercicio = service.getEjercicio(ejercicioId);
+
+        if (ejercicio != null && body.getDatosPizarra() != null) {
             List<DatosPizarraDto> nuevosDatos = body.getDatosPizarra();
-            for (int i = 0; i < updatedEjercicio.getDatosPizarra().size(); i ++){
-                serviceDatosPizarra.updateDatosPizarra(updatedEjercicio.getDatosPizarra().get(i).getId(), nuevosDatos.get(i));
+            for (int i = 0; i < nuevosDatos.size(); i ++) {
+                if (i < ejercicio.getDatosPizarra().size()){
+                    serviceDatosPizarra.updateDatosPizarra(ejercicio.getDatosPizarra().get(i).getId(), nuevosDatos.get(i));
+                } else {
+                    serviceDatosPizarra.createDatosPizarraRestantes(nuevosDatos.get(i), ejercicio);
+
+                }
+            }
+            if (nuevosDatos.size() < ejercicio.getDatosPizarra().size()){
+                for(int i = nuevosDatos.size(); i < ejercicio.getDatosPizarra().size(); i++) {
+                    ejercicio.getDatosPizarra().remove(ejercicio.getDatosPizarra().get(i));
+                }
             }
         }
+
+        Ejercicio updatedEjercicio = service.updateEjercicio(ejercicioId, body);
+
         if (updatedEjercicio != null) {
             return ResponseEntity.ok(updatedEjercicio);
         } else {

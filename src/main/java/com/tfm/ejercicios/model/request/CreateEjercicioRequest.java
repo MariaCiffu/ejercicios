@@ -4,6 +4,7 @@ import com.tfm.ejercicios.model.pojo.DatosPizarraDto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,5 +36,5 @@ public class CreateEjercicioRequest {
 
     @Size(min = 1, message = "Debe haber al menos un dato de pizarra")
     @NotNull(message = "Los datos de pizarra no pueden ser nulos")
-    private Set<DatosPizarraDto> datosPizarra;
+    private List<DatosPizarraDto> datosPizarra;
 }

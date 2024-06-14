@@ -22,5 +22,4 @@ public class DatosPizarraRepository {
     public DatosPizarra save(DatosPizarra datosPizarra) {
         return repository.save(datosPizarra);
     }
-
 }

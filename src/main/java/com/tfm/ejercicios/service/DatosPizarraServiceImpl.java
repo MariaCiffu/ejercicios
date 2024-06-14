@@ -32,6 +32,24 @@ public class DatosPizarraServiceImpl implements DatosPizarraService {
     private ObjectMapper objectMapper;
 
     @Override
+    public DatosPizarra createDatosPizarraRestantes(DatosPizarraDto request, Ejercicio ejercicio) {
+
+        if (request == null || ejercicio == null) {
+            return null;
+        }
+
+        DatosPizarra datosPizarra = DatosPizarra.builder()
+                .tipo(request.getTipo())
+                .nombre(request.getNombre())
+                .x(request.getX())
+                .y(request.getY())
+                .ejercicio(ejercicio)
+                .build();
+
+        return repository.save(datosPizarra);
+    }
+
+    @Override
     public DatosPizarra updateDatosPizarra(Long datosPizarraId, DatosPizarraDto updateRequest) {
         DatosPizarra datosPizarra = repository.getById(datosPizarraId);
         if (datosPizarra != null) {
