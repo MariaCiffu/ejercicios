@@ -161,20 +161,7 @@ public class EjerciciosController {
         }
         //Jugador rojo
         if (ejercicio != null && body.getJugadorRojo() != null) {
-            List<JugadorRojoDto> nuevosDatos = body.getJugadorRojo();
-            for (int i = 0; i < nuevosDatos.size(); i ++) {
-                if (i < ejercicio.getJugadorRojo().size()){
-                    serviceJugadorRojo.updateJugadorRojo(ejercicio.getJugadorRojo().get(i).getId(), nuevosDatos.get(i));
-                } else {
-                    serviceJugadorRojo.createJugadoresRojosRestantes(nuevosDatos.get(i), ejercicio);
-
-                }
-            }
-            if (nuevosDatos.size() < ejercicio.getJugadorRojo().size()){
-                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorRojo().size(); i++) {
-                    ejercicio.getJugadorRojo().remove(ejercicio.getJugadorRojo().get(i));
-                }
-            }
+            serviceJugadorRojo.updateElement(ejercicio, body.getJugadorRojo());
         }
 
         //Jugador rosa
