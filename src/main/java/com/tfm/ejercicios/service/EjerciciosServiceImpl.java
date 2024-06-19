@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tfm.ejercicios.data.EjercicioRepository;
 import com.tfm.ejercicios.model.pojo.*;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
-import com.tfm.ejercicios.model.request.CreateJugadorAmarilloRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -12,7 +11,6 @@ import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -83,7 +81,7 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                 .descripcion(request.getDescripcion())
                 .build();
 
-        // Asociar y guardar los DatosPizarra
+        // Asociar y guardar los jugadores rojos
         ejercicio.setJugadorRojo(request.getJugadorRojo().stream()
                 .map(jugadorRojoDto -> JugadorRojo.builder()
                         .nombre(jugadorRojoDto.getNombre())
@@ -94,12 +92,24 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                         .build())
                 .collect(Collectors.toList()));
 
+        // Asociar y guardar los jugadores amarillos
         ejercicio.setJugadorAmarillo(request.getJugadorAmarillo().stream()
                 .map(jugadorAmarilloDto -> JugadorAmarillo.builder()
                         .nombre(jugadorAmarilloDto.getNombre())
                         .idRef(jugadorAmarilloDto.getIdRef())
                         .x(jugadorAmarilloDto.getX())
                         .y(jugadorAmarilloDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
+                .collect(Collectors.toList()));
+
+        // Asociar y guardar los jugadores rosas
+        ejercicio.setJugadorRosa(request.getJugadorRosa().stream()
+                .map(jugadorRosaDto -> JugadorRosa.builder()
+                        .nombre(jugadorRosaDto.getNombre())
+                        .idRef(jugadorRosaDto.getIdRef())
+                        .x(jugadorRosaDto.getX())
+                        .y(jugadorRosaDto.getY())
                         .ejercicio(ejercicio)
                         .build())
                 .collect(Collectors.toList()));

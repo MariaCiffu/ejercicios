@@ -30,4 +30,6 @@ public class EjercicioDto {
     private List<JugadorRojoDto> jugadorRojo;
 
     private List<JugadorAmarilloDto> jugadorAmarillo;
+
+    private List<JugadorRosaDto> jugadorRosa;
 }

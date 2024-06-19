@@ -1,13 +1,11 @@
 package com.tfm.ejercicios.controller;
 
-import com.tfm.ejercicios.model.pojo.Ejercicio;
-import com.tfm.ejercicios.model.pojo.EjercicioDto;
-import com.tfm.ejercicios.model.pojo.JugadorAmarilloDto;
-import com.tfm.ejercicios.model.pojo.JugadorRojoDto;
+import com.tfm.ejercicios.model.pojo.*;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
 import com.tfm.ejercicios.service.JugadorAmarilloServiceImpl;
 import com.tfm.ejercicios.service.EjerciciosService;
 import com.tfm.ejercicios.service.JugadorRojoServiceImpl;
+import com.tfm.ejercicios.service.JugadorRosaServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +32,8 @@ public class EjerciciosController {
     private final JugadorRojoServiceImpl serviceJugadorRojo;
 
     private final JugadorAmarilloServiceImpl serviceJugadorAmarillo;
+
+    private final JugadorRosaServiceImpl serviceJugadorRosa;
 
     @GetMapping("/ejercicios")
     @Operation(
@@ -186,6 +186,24 @@ public class EjerciciosController {
             if (nuevosDatos.size() < ejercicio.getJugadorRojo().size()){
                 for(int i = nuevosDatos.size(); i < ejercicio.getJugadorRojo().size(); i++) {
                     ejercicio.getJugadorRojo().remove(ejercicio.getJugadorRojo().get(i));
+                }
+            }
+        }
+
+        //Jugador rosa
+        if (ejercicio != null && body.getJugadorRosa() != null) {
+            List<JugadorRosaDto> nuevosDatos = body.getJugadorRosa();
+            for (int i = 0; i < nuevosDatos.size(); i ++) {
+                if (i < ejercicio.getJugadorRosa().size()){
+                    serviceJugadorRosa.updateJugadorRosa(ejercicio.getJugadorRosa().get(i).getId(), nuevosDatos.get(i));
+                } else {
+                    serviceJugadorRosa.createJugadoresRosasRestantes(nuevosDatos.get(i), ejercicio);
+
+                }
+            }
+            if (nuevosDatos.size() < ejercicio.getJugadorRosa().size()){
+                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorRosa().size(); i++) {
+                    ejercicio.getJugadorRosa().remove(ejercicio.getJugadorRosa().get(i));
                 }
             }
         }

@@ -32,9 +32,12 @@ public class CreateEjercicioRequest {
     @NotBlank(message = "La descripción no puede estar vacía")
     private String descripcion;
 
-    @NotNull(message = "Los datos de pizarra no pueden ser nulos")
+    @NotNull(message = "Los datos del jugador rojo no pueden ser nulos")
     private List<CreateJugadorRojoRequest> jugadorRojo;
 
-    @NotNull(message = "Los datos de pizarra no pueden ser nulos")
+    @NotNull(message = "Los datos del jugador amarillo no pueden ser nulos")
     private List<CreateJugadorAmarilloRequest> jugadorAmarillo;
+
+    @NotNull(message = "Los datos del jugador rosa no pueden ser nulos")
+    private List<CreateJugadorRosaRequest> jugadorRosa;
 }
