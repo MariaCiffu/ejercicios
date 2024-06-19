@@ -2,8 +2,10 @@ package com.tfm.ejercicios.service;
 
 import com.tfm.ejercicios.model.pojo.*;
 
-public interface JugadorAzulService {
+import java.util.List;
 
+public interface JugadorAzulService {
+    void updateElement(Ejercicio ejercicio, List<JugadorAzulDto> nuevosDatos);
     JugadorAzul createJugadoresAzulesRestantes(JugadorAzulDto request, Ejercicio ejercicio);
     JugadorAzul updateJugadorAzul(Long jugadorAzulId, JugadorAzulDto updateRequest);
 }

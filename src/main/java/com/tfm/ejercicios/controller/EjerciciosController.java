@@ -197,22 +197,10 @@ public class EjerciciosController {
 
         //Jugador azul
         if (ejercicio != null && body.getJugadorAzul() != null) {
-            List<JugadorAzulDto> nuevosDatos = body.getJugadorAzul();
-            for (int i = 0; i < nuevosDatos.size(); i ++) {
-                if (i < ejercicio.getJugadorAzul().size()){
-                    serviceJugadorAzul.updateJugadorAzul(ejercicio.getJugadorAzul().get(i).getId(), nuevosDatos.get(i));
-                } else {
-                    serviceJugadorAzul.createJugadoresAzulesRestantes(nuevosDatos.get(i), ejercicio);
-
-                }
-            }
-            if (nuevosDatos.size() < ejercicio.getJugadorAzul().size()){
-                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAzul().size(); i++) {
-                    ejercicio.getJugadorAzul().remove(ejercicio.getJugadorAzul().get(i));
-                }
-            }
+            serviceJugadorAzul.updateElement(ejercicio, body.getJugadorAzul());
         }
 
+        //Ejercicio
         Ejercicio updatedEjercicio = service.updateEjercicio(ejercicioId, body);
 
         if (updatedEjercicio != null) {
