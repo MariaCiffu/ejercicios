@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class JugadorAmarilloServiceImpl implements JugadorAmarilloService {
@@ -45,6 +47,23 @@ public class JugadorAmarilloServiceImpl implements JugadorAmarilloService {
             return jugadorAmarillo;
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public void updateElement(Ejercicio ejercicio, List<JugadorAmarilloDto> nuevosDatos) {
+        for (int i = 0; i < nuevosDatos.size(); i ++) {
+            if (i < ejercicio.getJugadorAmarillo().size()){
+                this.updateJugadorAmarillo(ejercicio.getJugadorAmarillo().get(i).getId(), nuevosDatos.get(i));
+            } else {
+                this.createJugadoresAmarillosRestantes(nuevosDatos.get(i), ejercicio);
+
+            }
+        }
+        if (nuevosDatos.size() < ejercicio.getJugadorAmarillo().size()){
+            for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAmarillo().size(); i++) {
+                ejercicio.getJugadorAmarillo().remove(ejercicio.getJugadorAmarillo().get(i));
+            }
         }
     }
 }

@@ -50,6 +50,9 @@ public class Ejercicio {
     @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JugadorRosa> jugadorRosa = new ArrayList<>();
 
+    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<JugadorAzul> jugadorAzul = new ArrayList<>();
+
     public void update(EjercicioDto ejercicioDto) {
         this.imagen = ejercicioDto.getImagen();
         this.nombre = ejercicioDto.getNombre();

@@ -2,10 +2,7 @@ package com.tfm.ejercicios.controller;
 
 import com.tfm.ejercicios.model.pojo.*;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
-import com.tfm.ejercicios.service.JugadorAmarilloServiceImpl;
-import com.tfm.ejercicios.service.EjerciciosService;
-import com.tfm.ejercicios.service.JugadorRojoServiceImpl;
-import com.tfm.ejercicios.service.JugadorRosaServiceImpl;
+import com.tfm.ejercicios.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +31,8 @@ public class EjerciciosController {
     private final JugadorAmarilloServiceImpl serviceJugadorAmarillo;
 
     private final JugadorRosaServiceImpl serviceJugadorRosa;
+
+    private final JugadorAzulServiceImpl serviceJugadorAzul;
 
     @GetMapping("/ejercicios")
     @Operation(
@@ -155,22 +154,10 @@ public class EjerciciosController {
     public ResponseEntity<Ejercicio> updateEjercicio(@PathVariable String ejercicioId, @RequestBody EjercicioDto body) {
 
         Ejercicio ejercicio = service.getEjercicio(ejercicioId);
+
         //Jugador amarillo
         if (ejercicio != null && body.getJugadorAmarillo() != null) {
-            List<JugadorAmarilloDto> nuevosDatos = body.getJugadorAmarillo();
-            for (int i = 0; i < nuevosDatos.size(); i ++) {
-                if (i < ejercicio.getJugadorAmarillo().size()){
-                    serviceJugadorAmarillo.updateJugadorAmarillo(ejercicio.getJugadorAmarillo().get(i).getId(), nuevosDatos.get(i));
-                } else {
-                    serviceJugadorAmarillo.createJugadoresAmarillosRestantes(nuevosDatos.get(i), ejercicio);
-
-                }
-            }
-            if (nuevosDatos.size() < ejercicio.getJugadorAmarillo().size()){
-                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAmarillo().size(); i++) {
-                    ejercicio.getJugadorAmarillo().remove(ejercicio.getJugadorAmarillo().get(i));
-                }
-            }
+            serviceJugadorAmarillo.updateElement(ejercicio, body.getJugadorAmarillo());
         }
         //Jugador rojo
         if (ejercicio != null && body.getJugadorRojo() != null) {
@@ -204,6 +191,24 @@ public class EjerciciosController {
             if (nuevosDatos.size() < ejercicio.getJugadorRosa().size()){
                 for(int i = nuevosDatos.size(); i < ejercicio.getJugadorRosa().size(); i++) {
                     ejercicio.getJugadorRosa().remove(ejercicio.getJugadorRosa().get(i));
+                }
+            }
+        }
+
+        //Jugador azul
+        if (ejercicio != null && body.getJugadorAzul() != null) {
+            List<JugadorAzulDto> nuevosDatos = body.getJugadorAzul();
+            for (int i = 0; i < nuevosDatos.size(); i ++) {
+                if (i < ejercicio.getJugadorAzul().size()){
+                    serviceJugadorAzul.updateJugadorAzul(ejercicio.getJugadorAzul().get(i).getId(), nuevosDatos.get(i));
+                } else {
+                    serviceJugadorAzul.createJugadoresAzulesRestantes(nuevosDatos.get(i), ejercicio);
+
+                }
+            }
+            if (nuevosDatos.size() < ejercicio.getJugadorAzul().size()){
+                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAzul().size(); i++) {
+                    ejercicio.getJugadorAzul().remove(ejercicio.getJugadorAzul().get(i));
                 }
             }
         }
