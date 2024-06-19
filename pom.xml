@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tfm</groupId>
-	<artifactId>ejercicios</artifactId>
+	<artifactId>ms-ejercicios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ejercicios</name>
+	<name>ms-ejercicios</name>
 	<description>Microservicio para gestionar los ejercicios</description>
 	<properties>
 		<java.version>17</java.version>

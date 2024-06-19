@@ -22,9 +22,6 @@ public class EjercicioRepository {
 
     public Ejercicio getById(Long id) {return repository.findById(id).orElse(null);}
 
-    public Ejercicio getByIdAndDatos(Long id) {return repository.findByIdWithDatosPizarra(id).orElse(null);}
-
-
     public Ejercicio save(Ejercicio ejercicio) {
         return repository.save(ejercicio);
     }

@@ -1,11 +1,10 @@
 package com.tfm.ejercicios.controller;
 
-import com.tfm.ejercicios.model.pojo.DatosPizarra;
-import com.tfm.ejercicios.model.pojo.DatosPizarraDto;
 import com.tfm.ejercicios.model.pojo.Ejercicio;
 import com.tfm.ejercicios.model.pojo.EjercicioDto;
+import com.tfm.ejercicios.model.pojo.JugadorAmarilloDto;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
-import com.tfm.ejercicios.service.DatosPizarraServiceImpl;
+import com.tfm.ejercicios.service.JugadorAmarilloServiceImpl;
 import com.tfm.ejercicios.service.EjerciciosService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,7 +29,7 @@ import java.util.Map;
 public class EjerciciosController {
     private final EjerciciosService service;
 
-    private final DatosPizarraServiceImpl serviceDatosPizarra;
+    private final JugadorAmarilloServiceImpl serviceJugadorAmarillo;
 
     @GetMapping("/ejercicios")
     @Operation(
@@ -50,10 +49,10 @@ public class EjerciciosController {
             @RequestParam(required = false) String objetivo) {
 
         log.info("headers: {}", headers);
-        List<Ejercicio> ejericicos = service.getEjercicios(nombre, tipo, objetivo);
+        List<Ejercicio> ejercicios = service.getEjercicios(nombre, tipo, objetivo);
 
-        if (ejericicos != null) {
-            return ResponseEntity.ok(ejericicos);
+        if (ejercicios != null) {
+            return ResponseEntity.ok(ejercicios);
         } else {
             return ResponseEntity.ok(Collections.emptyList());
         }
@@ -153,19 +152,19 @@ public class EjerciciosController {
 
         Ejercicio ejercicio = service.getEjercicio(ejercicioId);
 
-        if (ejercicio != null && body.getDatosPizarra() != null) {
-            List<DatosPizarraDto> nuevosDatos = body.getDatosPizarra();
+        if (ejercicio != null && body.getJugadorAmarillo() != null) {
+            List<JugadorAmarilloDto> nuevosDatos = body.getJugadorAmarillo();
             for (int i = 0; i < nuevosDatos.size(); i ++) {
-                if (i < ejercicio.getDatosPizarra().size()){
-                    serviceDatosPizarra.updateDatosPizarra(ejercicio.getDatosPizarra().get(i).getId(), nuevosDatos.get(i));
+                if (i < ejercicio.getJugadorAmarillo().size()){
+                    serviceJugadorAmarillo.updateJugadorAmarillo(ejercicio.getJugadorAmarillo().get(i).getId(), nuevosDatos.get(i));
                 } else {
-                    serviceDatosPizarra.createDatosPizarraRestantes(nuevosDatos.get(i), ejercicio);
+                    serviceJugadorAmarillo.createJugadoresAmarillosRestantes(nuevosDatos.get(i), ejercicio);
 
                 }
             }
-            if (nuevosDatos.size() < ejercicio.getDatosPizarra().size()){
-                for(int i = nuevosDatos.size(); i < ejercicio.getDatosPizarra().size(); i++) {
-                    ejercicio.getDatosPizarra().remove(ejercicio.getDatosPizarra().get(i));
+            if (nuevosDatos.size() < ejercicio.getJugadorAmarillo().size()){
+                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAmarillo().size(); i++) {
+                    ejercicio.getJugadorAmarillo().remove(ejercicio.getJugadorAmarillo().get(i));
                 }
             }
         }

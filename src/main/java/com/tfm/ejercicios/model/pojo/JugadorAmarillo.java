@@ -1,28 +1,26 @@
 package com.tfm.ejercicios.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Objects;
-
 @Entity
-@Table(name = "datosPizarra")
+@Table(name = "jugadorAmarillo")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-public class DatosPizarra {
+public class JugadorAmarillo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tipo")
-    private String tipo;
+    @Column(name = "idRef")
+    private Integer idRef;
 
     @Column(name = "nombre")
     private String nombre;
@@ -33,15 +31,15 @@ public class DatosPizarra {
     @Column(name = "y")
     private Integer y;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ejercicio_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private Ejercicio ejercicio;
 
-    public void update(DatosPizarraDto datosPizarraDto) {
-        this.tipo = datosPizarraDto.getTipo();
-        this.nombre = datosPizarraDto.getNombre();
-        this.x = datosPizarraDto.getX();
-        this.y = datosPizarraDto.getY();
+    public void update(JugadorAmarilloDto jugadorAmarilloDto) {
+        this.nombre = jugadorAmarilloDto.getNombre();
+        this.idRef = jugadorAmarilloDto.getIdRef();
+        this.x = jugadorAmarilloDto.getX();
+        this.y = jugadorAmarilloDto.getY();
     }
 }

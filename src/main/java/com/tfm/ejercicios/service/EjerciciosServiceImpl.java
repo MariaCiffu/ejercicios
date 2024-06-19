@@ -1,15 +1,13 @@
 package com.tfm.ejercicios.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tfm.ejercicios.data.EjercicioRepository;
-import com.tfm.ejercicios.model.pojo.DatosPizarra;
 import com.tfm.ejercicios.model.pojo.Ejercicio;
 import com.tfm.ejercicios.model.pojo.EjercicioDto;
+import com.tfm.ejercicios.model.pojo.JugadorAmarillo;
+import com.tfm.ejercicios.model.pojo.JugadorAmarilloDto;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
+import com.tfm.ejercicios.model.request.CreateJugadorAmarilloRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -17,6 +15,7 @@ import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class EjerciciosServiceImpl implements EjerciciosService {
     }
 
     @Override
-    public Ejercicio getEjercicio(String miembroId) { return repository.getByIdAndDatos(Long.valueOf(miembroId));}
+    public Ejercicio getEjercicio(String ejercicioId) { return repository.getById(Long.valueOf(ejercicioId));}
 
     @Override
     public Boolean removeEjercicio(String ejercicioId) {
@@ -88,16 +87,14 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                 .build();
 
         // Asociar y guardar los DatosPizarra
-        ejercicio.setDatosPizarra(request.getDatosPizarra().stream()
-                .map(datosPizarraDto -> {
-                    return DatosPizarra.builder()
-                            .tipo(datosPizarraDto.getTipo())
-                            .nombre(datosPizarraDto.getNombre())
-                            .x(datosPizarraDto.getX())
-                            .y(datosPizarraDto.getY())
-                            .ejercicio(ejercicio)
-                            .build();
-                })
+        ejercicio.setJugadorAmarillo(request.getJugadorAmarillo().stream()
+                .map(jugadorAmarilloDto -> JugadorAmarillo.builder()
+                        .nombre(jugadorAmarilloDto.getNombre())
+                        .idRef(jugadorAmarilloDto.getIdRef())
+                        .x(jugadorAmarilloDto.getX())
+                        .y(jugadorAmarilloDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
                 .collect(Collectors.toList()));
 
         return repository.save(ejercicio);

@@ -10,6 +10,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface EjercicioJpaRepository extends JpaRepository<Ejercicio, Long>, JpaSpecificationExecutor<Ejercicio> {
-    @Query("SELECT e FROM Ejercicio e JOIN FETCH e.datosPizarra WHERE e.id = :id")
-    Optional<Ejercicio> findByIdWithDatosPizarra(@Param("id") Long id);
+
 }

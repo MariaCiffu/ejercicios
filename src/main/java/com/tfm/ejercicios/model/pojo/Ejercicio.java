@@ -19,7 +19,8 @@ public class Ejercicio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "imagen")
+    @Column(name = "imagen", columnDefinition = "MEDIUMTEXT")
+    @Lob
     private String imagen;
 
     @Column(name = "nombre")
@@ -41,7 +42,7 @@ public class Ejercicio {
     private String descripcion;
 
     @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<DatosPizarra> datosPizarra = new ArrayList<>();
+    List<JugadorAmarillo> jugadorAmarillo = new ArrayList<>();
 
     public void update(EjercicioDto ejercicioDto) {
         this.imagen = ejercicioDto.getImagen();
