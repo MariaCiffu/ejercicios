@@ -43,4 +43,8 @@ public class CreateEjercicioRequest {
 
     @NotNull(message = "Los datos del jugador azul no pueden ser nulos")
     private List<CreateJugadorAzulRequest> jugadorAzul;
+
+    @NotNull(message = "Los datos de la pelota no pueden ser nulos")
+    private List<CreatePelotaRequest> pelota;
+
 }

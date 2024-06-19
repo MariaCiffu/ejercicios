@@ -34,6 +34,8 @@ public class EjerciciosController {
 
     private final JugadorAzulServiceImpl serviceJugadorAzul;
 
+    private final PelotaServiceImpl servicePelota;
+
     @GetMapping("/ejercicios")
     @Operation(
             operationId = "Obtener ejercicios",
@@ -172,6 +174,11 @@ public class EjerciciosController {
         //Jugador azul
         if (ejercicio != null && body.getJugadorAzul() != null) {
             serviceJugadorAzul.updateElement(ejercicio, body.getJugadorAzul());
+        }
+
+        //Pelota
+        if (ejercicio != null && body.getPelota() != null) {
+            servicePelota.updateElement(ejercicio, body.getPelota());
         }
 
         //Ejercicio

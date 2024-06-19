@@ -90,7 +90,7 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                         .y(jugadorRojoDto.getY())
                         .ejercicio(ejercicio)
                         .build())
-                .collect(Collectors.toList()));
+                .toList());
 
         // Asociar y guardar los jugadores amarillos
         ejercicio.setJugadorAmarillo(request.getJugadorAmarillo().stream()
@@ -101,7 +101,7 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                         .y(jugadorAmarilloDto.getY())
                         .ejercicio(ejercicio)
                         .build())
-                .collect(Collectors.toList()));
+                .toList());
 
         // Asociar y guardar los jugadores rosas
         ejercicio.setJugadorRosa(request.getJugadorRosa().stream()
@@ -112,7 +112,28 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                         .y(jugadorRosaDto.getY())
                         .ejercicio(ejercicio)
                         .build())
-                .collect(Collectors.toList()));
+                .toList());
+
+        // Asociar y guardar los jugadores azules
+        ejercicio.setJugadorAzul(request.getJugadorAzul().stream()
+                .map(jugadorAzulDto -> JugadorAzul.builder()
+                        .nombre(jugadorAzulDto.getNombre())
+                        .idRef(jugadorAzulDto.getIdRef())
+                        .x(jugadorAzulDto.getX())
+                        .y(jugadorAzulDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
+                .toList());
+
+        // Asociar y guardar los jugadores azules
+        ejercicio.setPelota(request.getPelota().stream()
+                .map(pelotaDto -> Pelota.builder()
+                        .idRef(pelotaDto.getIdRef())
+                        .x(pelotaDto.getX())
+                        .y(pelotaDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
+                .toList());
 
         return repository.save(ejercicio);
     }
