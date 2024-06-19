@@ -135,6 +135,26 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                         .build())
                 .toList());
 
+        // Asociar y guardar los conos
+        ejercicio.setCono(request.getCono().stream()
+                .map(conoDto -> Cono.builder()
+                        .idRef(conoDto.getIdRef())
+                        .x(conoDto.getX())
+                        .y(conoDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
+                .toList());
+
+        // Asociar y guardar los conos altos
+        ejercicio.setConoAlto(request.getConoAlto().stream()
+                .map(conoAltoDto -> ConoAlto.builder()
+                        .idRef(conoAltoDto.getIdRef())
+                        .x(conoAltoDto.getX())
+                        .y(conoAltoDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
+                .toList());
+
         return repository.save(ejercicio);
     }
 

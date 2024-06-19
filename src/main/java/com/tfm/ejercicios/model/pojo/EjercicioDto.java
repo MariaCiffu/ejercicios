@@ -36,4 +36,8 @@ public class EjercicioDto {
     private List<JugadorAzulDto> jugadorAzul;
 
     private List<PelotaDto> pelota;
+
+    private List<ConoDto> cono;
+
+    private List<ConoAltoDto> conoAlto;
 }

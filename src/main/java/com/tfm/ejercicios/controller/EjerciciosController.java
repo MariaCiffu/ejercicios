@@ -36,6 +36,10 @@ public class EjerciciosController {
 
     private final PelotaServiceImpl servicePelota;
 
+    private final ConoServiceImpl serviceCono;
+
+    private final ConoAltoServiceImpl serviceConoAlto;
+
     @GetMapping("/ejercicios")
     @Operation(
             operationId = "Obtener ejercicios",
@@ -179,6 +183,16 @@ public class EjerciciosController {
         //Pelota
         if (ejercicio != null && body.getPelota() != null) {
             servicePelota.updateElement(ejercicio, body.getPelota());
+        }
+
+        //Cono
+        if (ejercicio != null && body.getCono() != null) {
+            serviceCono.updateElement(ejercicio, body.getCono());
+        }
+
+        //Cono alto
+        if (ejercicio != null && body.getConoAlto() != null) {
+            serviceConoAlto.updateElement(ejercicio, body.getConoAlto());
         }
 
         //Ejercicio
