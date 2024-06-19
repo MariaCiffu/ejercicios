@@ -2,10 +2,7 @@ package com.tfm.ejercicios.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tfm.ejercicios.data.EjercicioRepository;
-import com.tfm.ejercicios.model.pojo.Ejercicio;
-import com.tfm.ejercicios.model.pojo.EjercicioDto;
-import com.tfm.ejercicios.model.pojo.JugadorAmarillo;
-import com.tfm.ejercicios.model.pojo.JugadorAmarilloDto;
+import com.tfm.ejercicios.model.pojo.*;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
 import com.tfm.ejercicios.model.request.CreateJugadorAmarilloRequest;
 import jakarta.validation.ConstraintViolation;
@@ -87,6 +84,16 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                 .build();
 
         // Asociar y guardar los DatosPizarra
+        ejercicio.setJugadorRojo(request.getJugadorRojo().stream()
+                .map(jugadorRojoDto -> JugadorRojo.builder()
+                        .nombre(jugadorRojoDto.getNombre())
+                        .idRef(jugadorRojoDto.getIdRef())
+                        .x(jugadorRojoDto.getX())
+                        .y(jugadorRojoDto.getY())
+                        .ejercicio(ejercicio)
+                        .build())
+                .collect(Collectors.toList()));
+
         ejercicio.setJugadorAmarillo(request.getJugadorAmarillo().stream()
                 .map(jugadorAmarilloDto -> JugadorAmarillo.builder()
                         .nombre(jugadorAmarilloDto.getNombre())

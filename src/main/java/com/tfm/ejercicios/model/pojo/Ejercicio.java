@@ -42,6 +42,9 @@ public class Ejercicio {
     private String descripcion;
 
     @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<JugadorRojo> jugadorRojo = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
     List<JugadorAmarillo> jugadorAmarillo = new ArrayList<>();
 
     public void update(EjercicioDto ejercicioDto) {

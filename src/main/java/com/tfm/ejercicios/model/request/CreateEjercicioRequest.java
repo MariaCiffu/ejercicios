@@ -32,7 +32,9 @@ public class CreateEjercicioRequest {
     @NotBlank(message = "La descripción no puede estar vacía")
     private String descripcion;
 
-    @Size(min = 1, message = "Debe haber al menos un dato de pizarra")
+    @NotNull(message = "Los datos de pizarra no pueden ser nulos")
+    private List<CreateJugadorRojoRequest> jugadorRojo;
+
     @NotNull(message = "Los datos de pizarra no pueden ser nulos")
     private List<CreateJugadorAmarilloRequest> jugadorAmarillo;
 }

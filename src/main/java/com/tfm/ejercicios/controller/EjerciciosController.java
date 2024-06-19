@@ -3,9 +3,11 @@ package com.tfm.ejercicios.controller;
 import com.tfm.ejercicios.model.pojo.Ejercicio;
 import com.tfm.ejercicios.model.pojo.EjercicioDto;
 import com.tfm.ejercicios.model.pojo.JugadorAmarilloDto;
+import com.tfm.ejercicios.model.pojo.JugadorRojoDto;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
 import com.tfm.ejercicios.service.JugadorAmarilloServiceImpl;
 import com.tfm.ejercicios.service.EjerciciosService;
+import com.tfm.ejercicios.service.JugadorRojoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,6 +30,8 @@ import java.util.Map;
 @Tag(name = "Ejercicios Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre ejercicios alojados en una base de datos en memoria.")
 public class EjerciciosController {
     private final EjerciciosService service;
+
+    private final JugadorRojoServiceImpl serviceJugadorRojo;
 
     private final JugadorAmarilloServiceImpl serviceJugadorAmarillo;
 
@@ -151,7 +155,7 @@ public class EjerciciosController {
     public ResponseEntity<Ejercicio> updateEjercicio(@PathVariable String ejercicioId, @RequestBody EjercicioDto body) {
 
         Ejercicio ejercicio = service.getEjercicio(ejercicioId);
-
+        //Jugador amarillo
         if (ejercicio != null && body.getJugadorAmarillo() != null) {
             List<JugadorAmarilloDto> nuevosDatos = body.getJugadorAmarillo();
             for (int i = 0; i < nuevosDatos.size(); i ++) {
@@ -165,6 +169,23 @@ public class EjerciciosController {
             if (nuevosDatos.size() < ejercicio.getJugadorAmarillo().size()){
                 for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAmarillo().size(); i++) {
                     ejercicio.getJugadorAmarillo().remove(ejercicio.getJugadorAmarillo().get(i));
+                }
+            }
+        }
+        //Jugador rojo
+        if (ejercicio != null && body.getJugadorRojo() != null) {
+            List<JugadorRojoDto> nuevosDatos = body.getJugadorRojo();
+            for (int i = 0; i < nuevosDatos.size(); i ++) {
+                if (i < ejercicio.getJugadorRojo().size()){
+                    serviceJugadorRojo.updateJugadorRojo(ejercicio.getJugadorRojo().get(i).getId(), nuevosDatos.get(i));
+                } else {
+                    serviceJugadorRojo.createJugadoresRojosRestantes(nuevosDatos.get(i), ejercicio);
+
+                }
+            }
+            if (nuevosDatos.size() < ejercicio.getJugadorRojo().size()){
+                for(int i = nuevosDatos.size(); i < ejercicio.getJugadorRojo().size(); i++) {
+                    ejercicio.getJugadorRojo().remove(ejercicio.getJugadorRojo().get(i));
                 }
             }
         }

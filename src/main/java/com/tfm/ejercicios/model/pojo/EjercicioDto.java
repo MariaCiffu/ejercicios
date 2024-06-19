@@ -27,5 +27,7 @@ public class EjercicioDto {
 
     private String descripcion;
 
+    private List<JugadorRojoDto> jugadorRojo;
+
     private List<JugadorAmarilloDto> jugadorAmarillo;
 }
