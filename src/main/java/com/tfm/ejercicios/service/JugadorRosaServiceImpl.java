@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class JugadorRosaServiceImpl implements JugadorRosaService {
@@ -44,6 +46,23 @@ public class JugadorRosaServiceImpl implements JugadorRosaService {
             return jugadorRosa;
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public void updateElement(Ejercicio ejercicio, List<JugadorRosaDto> nuevosDatos) {
+        for (int i = 0; i < nuevosDatos.size(); i ++) {
+            if (i < ejercicio.getJugadorRosa().size()){
+                this.updateJugadorRosa(ejercicio.getJugadorRosa().get(i).getId(), nuevosDatos.get(i));
+            } else {
+                this.createJugadoresRosasRestantes(nuevosDatos.get(i), ejercicio);
+
+            }
+        }
+        if (nuevosDatos.size() < ejercicio.getJugadorRosa().size()){
+            for(int i = nuevosDatos.size(); i < ejercicio.getJugadorRosa().size(); i++) {
+                ejercicio.getJugadorRosa().remove(ejercicio.getJugadorRosa().get(i));
+            }
         }
     }
 }
