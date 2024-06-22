@@ -27,20 +27,6 @@ import java.util.Map;
 public class EjerciciosController {
     private final EjerciciosService service;
 
-    private final JugadorRojoServiceImpl serviceJugadorRojo;
-
-    private final JugadorAmarilloServiceImpl serviceJugadorAmarillo;
-
-    private final JugadorRosaServiceImpl serviceJugadorRosa;
-
-    private final JugadorAzulServiceImpl serviceJugadorAzul;
-
-    private final PelotaServiceImpl servicePelota;
-
-    private final ConoServiceImpl serviceCono;
-
-    private final ConoAltoServiceImpl serviceConoAlto;
-
     @GetMapping("/ejercicios")
     @Operation(
             operationId = "Obtener ejercicios",
@@ -48,7 +34,7 @@ public class EjerciciosController {
             summary = "Se devuelve una lista de todos los ejercicios almacenados en la base de datos.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ejercicio.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EjercicioResponse.class)))
     public ResponseEntity<List<EjercicioResponse>> getEjercicios(
             @RequestHeader Map<String, String> headers,
             @Parameter(name = "nombre", description = "Nombre del ejercicio", required = false)
@@ -75,7 +61,7 @@ public class EjerciciosController {
             summary = "Se devuelve un ejercicio a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ejercicio.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EjercicioResponse.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
@@ -150,10 +136,10 @@ public class EjerciciosController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del ejercicio a actualizar.",
                     required = true,
-                    content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = EjercicioDto.class))))
+                    content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = CreateEjercicioRequest.class))))
     @ApiResponse(
             responseCode = "200",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ejercicio.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = EjercicioResponse.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),

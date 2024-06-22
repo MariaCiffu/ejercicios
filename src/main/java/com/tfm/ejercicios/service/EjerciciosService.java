@@ -1,7 +1,5 @@
 package com.tfm.ejercicios.service;
 
-import com.tfm.ejercicios.model.pojo.Ejercicio;
-import com.tfm.ejercicios.model.pojo.EjercicioDto;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
 import com.tfm.ejercicios.model.response.EjercicioResponse;
 
