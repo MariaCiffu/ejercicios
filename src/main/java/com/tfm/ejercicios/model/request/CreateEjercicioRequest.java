@@ -4,12 +4,15 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateEjercicioRequest {
+
+    private Integer id;
 
     @NotBlank(message = "La imagen no puede estar vacía")
     private String imagen;
@@ -33,24 +36,5 @@ public class CreateEjercicioRequest {
     private String descripcion;
 
     @NotNull(message = "Los datos del jugador rojo no pueden ser nulos")
-    private List<CreateJugadorRojoRequest> jugadorRojo;
-
-    @NotNull(message = "Los datos del jugador amarillo no pueden ser nulos")
-    private List<CreateJugadorAmarilloRequest> jugadorAmarillo;
-
-    @NotNull(message = "Los datos del jugador rosa no pueden ser nulos")
-    private List<CreateJugadorRosaRequest> jugadorRosa;
-
-    @NotNull(message = "Los datos del jugador azul no pueden ser nulos")
-    private List<CreateJugadorAzulRequest> jugadorAzul;
-
-    @NotNull(message = "Los datos de la pelota no pueden ser nulos")
-    private List<CreatePelotaRequest> pelota;
-
-    @NotNull(message = "Los datos de los conos no pueden ser nulos")
-    private List<CreateConoRequest> cono;
-
-    @NotNull(message = "Los datos de los conos altos no pueden ser nulos")
-    private List<CreateConoAltoRequest> conoAlto;
-
+    private Map<String, List<CreateDatoPizarraRequest>> datosPizarra;
 }

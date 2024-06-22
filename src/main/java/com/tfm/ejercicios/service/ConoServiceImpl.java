@@ -20,48 +20,48 @@ public class ConoServiceImpl implements ConoService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Override
-    public Cono createConosRestantes(ConoDto request, Ejercicio ejercicio) {
-
-        if (request == null || ejercicio == null) {
-            return null;
-        }
-
-        Cono cono = Cono.builder()
-                .x(request.getX())
-                .y(request.getY())
-                .ejercicio(ejercicio)
-                .build();
-
-        return repository.save(cono);
-    }
-
-    @Override
-    public Cono updateCono(Long conoId, ConoDto updateRequest) {
-        Cono cono = repository.getById(conoId);
-        if (cono != null) {
-            cono.update(updateRequest);
-            repository.save(cono);
-            return cono;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void updateElement(Ejercicio ejercicio, List<ConoDto> nuevosDatos) {
-        for (int i = 0; i < nuevosDatos.size(); i ++) {
-            if (i < ejercicio.getCono().size()){
-                this.updateCono(ejercicio.getCono().get(i).getId(), nuevosDatos.get(i));
-            } else {
-                this.createConosRestantes(nuevosDatos.get(i), ejercicio);
-
-            }
-        }
-        if (nuevosDatos.size() < ejercicio.getCono().size()){
-            for(int i = nuevosDatos.size(); i < ejercicio.getCono().size(); i++) {
-                ejercicio.getCono().remove(ejercicio.getCono().get(i));
-            }
-        }
-    }
+//    @Override
+//    public Cono createConosRestantes(ConoDto request, Ejercicio ejercicio) {
+//
+//        if (request == null || ejercicio == null) {
+//            return null;
+//        }
+//
+//        Cono cono = Cono.builder()
+//                .x(request.getX())
+//                .y(request.getY())
+//                .ejercicio(ejercicio)
+//                .build();
+//
+//        return repository.save(cono);
+//    }
+//
+//    @Override
+//    public Cono updateCono(Long conoId, ConoDto updateRequest) {
+//        Cono cono = repository.getById(conoId);
+//        if (cono != null) {
+//            cono.update(updateRequest);
+//            repository.save(cono);
+//            return cono;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public void updateElement(Ejercicio ejercicio, List<ConoDto> nuevosDatos) {
+//        for (int i = 0; i < nuevosDatos.size(); i ++) {
+//            if (i < ejercicio.getCono().size()){
+//                this.updateCono(ejercicio.getCono().get(i).getId(), nuevosDatos.get(i));
+//            } else {
+//                this.createConosRestantes(nuevosDatos.get(i), ejercicio);
+//
+//            }
+//        }
+//        if (nuevosDatos.size() < ejercicio.getCono().size()){
+//            for(int i = nuevosDatos.size(); i < ejercicio.getCono().size(); i++) {
+//                ejercicio.getCono().remove(ejercicio.getCono().get(i));
+//            }
+//        }
+//    }
 }

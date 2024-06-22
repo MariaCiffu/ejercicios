@@ -1,7 +1,9 @@
 package com.tfm.ejercicios.model.pojo;
 
+import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,8 @@ public class Ejercicio {
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "tipo")
-    private String tipo;
+    @Column(name = "tipoEj")
+    private String tipoEj;
 
     @Column(name = "objetivo")
     private String objetivo;
@@ -42,30 +44,13 @@ public class Ejercicio {
     private String descripcion;
 
     @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<JugadorRojo> jugadorRojo = new ArrayList<>();
+    List<DatoPizarra> datoPizarra = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<JugadorAmarillo> jugadorAmarillo = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<JugadorRosa> jugadorRosa = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<JugadorAzul> jugadorAzul = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Pelota> pelota = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Cono> cono = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ConoAlto> conoAlto = new ArrayList<>();
-
-    public void update(EjercicioDto ejercicioDto) {
+    public void update(CreateEjercicioRequest ejercicioDto) {
         this.imagen = ejercicioDto.getImagen();
         this.nombre = ejercicioDto.getNombre();
-        this.tipo = ejercicioDto.getTipo();
+        this.tipoEj = ejercicioDto.getTipo();
         this.objetivo = ejercicioDto.getObjetivo();
         this.duracion = ejercicioDto.getDuracion();
         this.unidadesDuracion = ejercicioDto.getUnidadesDuracion();

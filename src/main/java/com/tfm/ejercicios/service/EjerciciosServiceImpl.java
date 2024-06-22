@@ -3,7 +3,10 @@ package com.tfm.ejercicios.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tfm.ejercicios.data.EjercicioRepository;
 import com.tfm.ejercicios.model.pojo.*;
+import com.tfm.ejercicios.model.request.CreateDatoPizarraRequest;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
+import com.tfm.ejercicios.model.response.DatoPizarraResponse;
+import com.tfm.ejercicios.model.response.EjercicioResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -13,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,18 +30,29 @@ public class EjerciciosServiceImpl implements EjerciciosService {
     private ObjectMapper objectMapper;
 
     @Override
-    public List<Ejercicio> getEjercicios(String nombre, String tipo, String objetivo) {
+    public List<EjercicioResponse> getEjercicios(String nombre, String tipo, String objetivo) {
 
         if (StringUtils.hasLength(nombre) || StringUtils.hasLength(tipo) || StringUtils.hasLength(objetivo)) {
-            return repository.search(nombre, tipo, objetivo);
+            return repository.search(nombre, tipo, objetivo).stream()
+                    .map(ejercicio -> getEjercicio(ejercicio.getId().toString()))
+                    .toList();
         }
 
-        List<Ejercicio> ejercicios = repository.getEjercicios();
-        return ejercicios.isEmpty() ? null : ejercicios;
+        List<EjercicioResponse> ejercicioResponses = repository.getEjercicios().stream()
+                .map(ejercicio -> getEjercicio(ejercicio.getId().toString()))
+                .toList();
+
+        return ejercicioResponses.isEmpty() ? null : ejercicioResponses;
     }
 
     @Override
-    public Ejercicio getEjercicio(String ejercicioId) { return repository.getById(Long.valueOf(ejercicioId));}
+    public EjercicioResponse getEjercicio(String ejercicioId) {
+        Ejercicio ejercicio = repository.getById(Long.valueOf(ejercicioId));
+
+        // Transformar los datosPizarra al formato deseado
+        return this.crearRespuesta(ejercicio);
+    }
+
 
     @Override
     public Boolean removeEjercicio(String ejercicioId) {
@@ -55,7 +68,7 @@ public class EjerciciosServiceImpl implements EjerciciosService {
     }
 
     @Override
-    public Ejercicio createEjercicio(CreateEjercicioRequest request) {
+    public EjercicioResponse createEjercicio(CreateEjercicioRequest request) {
 
         if (request == null) {
             return null;
@@ -74,99 +87,228 @@ public class EjerciciosServiceImpl implements EjerciciosService {
         Ejercicio ejercicio = Ejercicio.builder()
                 .imagen(request.getImagen())
                 .nombre(request.getNombre())
-                .tipo(request.getTipo())
+                .tipoEj(request.getTipo())
                 .objetivo(request.getObjetivo())
                 .duracion(request.getDuracion())
                 .unidadesDuracion(request.getUnidadesDuracion())
                 .descripcion(request.getDescripcion())
                 .build();
+        repository.save(ejercicio);
+
+
+        ejercicio.setDatoPizarra(this.createDatosPizarra(ejercicio, request));
+
+        // Guardar el ejercicio en la base de datos
+        repository.save(ejercicio);
+
+        return this.crearRespuesta(ejercicio);
+    }
+
+    public List<DatoPizarra> createDatosPizarra(Ejercicio ejercicio, CreateEjercicioRequest request) {
+        List<DatoPizarra> datosPizarra = new ArrayList<>();
 
         // Asociar y guardar los jugadores rojos
-        ejercicio.setJugadorRojo(request.getJugadorRojo().stream()
-                .map(jugadorRojoDto -> JugadorRojo.builder()
-                        .nombre(jugadorRojoDto.getNombre())
-                        .idRef(jugadorRojoDto.getIdRef())
-                        .x(jugadorRojoDto.getX())
-                        .y(jugadorRojoDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
+        for (Map.Entry<String, List<CreateDatoPizarraRequest>> entry : request.getDatosPizarra().entrySet()) {
+            for (CreateDatoPizarraRequest datoReq : entry.getValue()) {
+                if (("jugadoresRojos").equals(entry.getKey())) {
+                    JugadorRojo jugadorRojo = JugadorRojo.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .nombre(datoReq.getNombre())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(jugadorRojo);
+                } else if (("jugadoresAmarillos").equals(entry.getKey())) {
+                    JugadorAmarillo jugadorAmarillo = JugadorAmarillo.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .nombre(datoReq.getNombre())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(jugadorAmarillo);
+                } else if (("jugadoresRosas").equals(entry.getKey())) {
+                    JugadorRosa jugadorRosa = JugadorRosa.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .nombre(datoReq.getNombre())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(jugadorRosa);
+                } else if (("jugadoresAzules").equals(entry.getKey())) {
+                    JugadorAzul jugadorAzul = JugadorAzul.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .nombre(datoReq.getNombre())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(jugadorAzul);
+                } else if (("pelotas").equals(entry.getKey())) {
+                    Pelota pelota = Pelota.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(pelota);
+                } else if (("conos").equals(entry.getKey())) {
+                    Cono cono = Cono.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(cono);
+                } else if (("conosAltos").equals(entry.getKey())) {
+                    ConoAlto conoAlto = ConoAlto.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(conoAlto);
+                } else if (("microvallas").equals(entry.getKey())) {
+                    Microvalla microvalla = Microvalla.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(microvalla);
+                } else if (("picas").equals(entry.getKey())) {
+                    Pica pica = Pica.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(pica);
+                } else if (("escaleras").equals(entry.getKey())) {
+                    Escalera escalera = Escalera.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(escalera);
+                } else if (("porterias").equals(entry.getKey())) {
+                    Porteria porteria = Porteria.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(porteria);
+                }
 
-        // Asociar y guardar los jugadores amarillos
-        ejercicio.setJugadorAmarillo(request.getJugadorAmarillo().stream()
-                .map(jugadorAmarilloDto -> JugadorAmarillo.builder()
-                        .nombre(jugadorAmarilloDto.getNombre())
-                        .idRef(jugadorAmarilloDto.getIdRef())
-                        .x(jugadorAmarilloDto.getX())
-                        .y(jugadorAmarilloDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
+            }
+        }
+        return datosPizarra;
+    }
 
-        // Asociar y guardar los jugadores rosas
-        ejercicio.setJugadorRosa(request.getJugadorRosa().stream()
-                .map(jugadorRosaDto -> JugadorRosa.builder()
-                        .nombre(jugadorRosaDto.getNombre())
-                        .idRef(jugadorRosaDto.getIdRef())
-                        .x(jugadorRosaDto.getX())
-                        .y(jugadorRosaDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
+    public EjercicioResponse crearRespuesta(Ejercicio ejercicio) {
+        // Crear el DTO (Data Transfer Object) para la respuesta
+        EjercicioResponse ejercicioResponse = EjercicioResponse.builder()
+                .id(ejercicio.getId())
+                .imagen(ejercicio.getImagen())
+                .nombre(ejercicio.getNombre())
+                .tipoEj(ejercicio.getTipoEj())
+                .objetivo(ejercicio.getObjetivo())
+                .duracion(ejercicio.getDuracion())
+                .unidadesDuracion(ejercicio.getUnidadesDuracion())
+                .descripcion(ejercicio.getDescripcion())
+                .build();
 
-        // Asociar y guardar los jugadores azules
-        ejercicio.setJugadorAzul(request.getJugadorAzul().stream()
-                .map(jugadorAzulDto -> JugadorAzul.builder()
-                        .nombre(jugadorAzulDto.getNombre())
-                        .idRef(jugadorAzulDto.getIdRef())
-                        .x(jugadorAzulDto.getX())
-                        .y(jugadorAzulDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
 
-        // Asociar y guardar los jugadores azules
-        ejercicio.setPelota(request.getPelota().stream()
-                .map(pelotaDto -> Pelota.builder()
-                        .idRef(pelotaDto.getIdRef())
-                        .x(pelotaDto.getX())
-                        .y(pelotaDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
+        // Crear la estructura de datos para 'datosPizarra'
+        Map<String, List<DatoPizarraResponse>> datosPizarraMap = new HashMap<>();
+        datosPizarraMap.put("jugadoresRojos", new ArrayList<>());
+        datosPizarraMap.put("jugadoresAmarillos", new ArrayList<>());
+        datosPizarraMap.put("jugadoresRosas", new ArrayList<>());
+        datosPizarraMap.put("jugadoresAzules", new ArrayList<>());
+        datosPizarraMap.put("pelotas", new ArrayList<>());
+        datosPizarraMap.put("conos", new ArrayList<>());
+        datosPizarraMap.put("conosAltos", new ArrayList<>());
+        datosPizarraMap.put("microvallas", new ArrayList<>());
+        datosPizarraMap.put("picas", new ArrayList<>());
+        datosPizarraMap.put("escaleras", new ArrayList<>());
+        datosPizarraMap.put("porterias", new ArrayList<>());
+        datosPizarraMap.put("lineasRectas", new ArrayList<>());
 
-        // Asociar y guardar los conos
-        ejercicio.setCono(request.getCono().stream()
-                .map(conoDto -> Cono.builder()
-                        .idRef(conoDto.getIdRef())
-                        .x(conoDto.getX())
-                        .y(conoDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
+        // Llenar la estructura de datos con los objetos de 'DatoPizarra'
+        for (DatoPizarra dato : ejercicio.getDatoPizarra()) {
+            DatoPizarraResponse datoResponse = new DatoPizarraResponse();
+            datoResponse.setId(dato.getId());
+            datoResponse.setIdRef(dato.getIdRef());
+            datoResponse.setX(dato.getX());
+            datoResponse.setY(dato.getY());
 
-        // Asociar y guardar los conos altos
-        ejercicio.setConoAlto(request.getConoAlto().stream()
-                .map(conoAltoDto -> ConoAlto.builder()
-                        .idRef(conoAltoDto.getIdRef())
-                        .x(conoAltoDto.getX())
-                        .y(conoAltoDto.getY())
-                        .ejercicio(ejercicio)
-                        .build())
-                .toList());
+            // Verificar si el objeto 'DatoPizarra' es una instancia de una subclase que tiene un nombre
+            if (dato instanceof JugadorRojo) {
+                JugadorRojo jugadorRojo = (JugadorRojo) dato;
+                datoResponse.setNombre(jugadorRojo.getNombre());
+                datosPizarraMap.computeIfAbsent("jugadoresRojos", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof JugadorAmarillo) {
+                JugadorAmarillo jugadorAmarillo = (JugadorAmarillo) dato;
+                datoResponse.setNombre(jugadorAmarillo.getNombre());
+                datosPizarraMap.computeIfAbsent("jugadoresAmarillos", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof JugadorRosa) {
+                JugadorRosa jugadorRosa = (JugadorRosa) dato;
+                datoResponse.setNombre(jugadorRosa.getNombre());
+                datosPizarraMap.computeIfAbsent("jugadoresRosas", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof JugadorAzul) {
+                JugadorAzul jugadorAzul = (JugadorAzul) dato;
+                datoResponse.setNombre(jugadorAzul.getNombre());
+                datosPizarraMap.computeIfAbsent("jugadoresAzules", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Pelota) {
+                datosPizarraMap.computeIfAbsent("pelotas", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Cono) {
+                datosPizarraMap.computeIfAbsent("conos", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof ConoAlto) {
+                datosPizarraMap.computeIfAbsent("conosAltos", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Microvalla) {
+                datosPizarraMap.computeIfAbsent("microvallas", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Pica) {
+                datosPizarraMap.computeIfAbsent("picas", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Escalera) {
+                datosPizarraMap.computeIfAbsent("escaleras", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Porteria) {
+                datosPizarraMap.computeIfAbsent("porterias", k -> new ArrayList<>()).add(datoResponse);
+            }
+        }
 
-        return repository.save(ejercicio);
+        // Asignar la estructura de datos al DTO
+        ejercicioResponse.setDatosPizarra(datosPizarraMap);
+
+        // Devolver el DTO
+        return ejercicioResponse;
     }
 
     @Override
-    public Ejercicio updateEjercicio(String ejercicioId, EjercicioDto updateRequest) {
+    public EjercicioResponse updateEjercicio(String ejercicioId, CreateEjercicioRequest updateRequest) {
         Ejercicio ejercicio = repository.getById(Long.valueOf(ejercicioId));
         if (ejercicio != null) {
             ejercicio.update(updateRequest);
-            repository.save(ejercicio);
-            return ejercicio;
+
+            // Vaciar la colección de DatoPizarra
+            ejercicio.getDatoPizarra().clear();
+            repository.saveAndFlush(ejercicio); // Guardar y sincronizar el estado
+
+            // Añadir los nuevos DatoPizarra a la misma colección
+            List<DatoPizarra> nuevosDatosPizarra = this.createDatosPizarra(ejercicio, updateRequest);
+            for (DatoPizarra dato : nuevosDatosPizarra) {
+                ejercicio.getDatoPizarra().add(dato);
+                dato.setEjercicio(ejercicio); // Establecer la relación inversa
+            }
+
+            repository.save(ejercicio); // Guardar el ejercicio con los nuevos DatoPizarra
+            return this.crearRespuesta(ejercicio);
         } else {
             return null;
         }
     }
+
 }

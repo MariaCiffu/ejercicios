@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface JugadorAmarilloService {
 
-    void updateElement(Ejercicio ejercicio, List<JugadorAmarilloDto> nuevosDatos);
-    JugadorAmarillo createJugadoresAmarillosRestantes(JugadorAmarilloDto request, Ejercicio ejercicio);
-    JugadorAmarillo updateJugadorAmarillo(Long jugadorAmarilloId, JugadorAmarilloDto updateRequest);
+//    void updateElement(Ejercicio ejercicio, List<JugadorAmarilloDto> nuevosDatos);
+//    JugadorAmarillo createJugadoresAmarillosRestantes(JugadorAmarilloDto request, Ejercicio ejercicio);
+//    JugadorAmarillo updateJugadorAmarillo(Long jugadorAmarilloId, JugadorAmarilloDto updateRequest);
 }
 

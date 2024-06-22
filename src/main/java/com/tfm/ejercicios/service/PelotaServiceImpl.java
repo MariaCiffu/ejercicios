@@ -20,48 +20,48 @@ public class PelotaServiceImpl implements PelotaService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Override
-    public Pelota createPelotasRestantes(PelotaDto request, Ejercicio ejercicio) {
-
-        if (request == null || ejercicio == null) {
-            return null;
-        }
-
-        Pelota pelota = Pelota.builder()
-                .x(request.getX())
-                .y(request.getY())
-                .ejercicio(ejercicio)
-                .build();
-
-        return repository.save(pelota);
-    }
-
-    @Override
-    public Pelota updatePelota(Long pelotaId, PelotaDto updateRequest) {
-        Pelota pelota = repository.getById(pelotaId);
-        if (pelota != null) {
-            pelota.update(updateRequest);
-            repository.save(pelota);
-            return pelota;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void updateElement(Ejercicio ejercicio, List<PelotaDto> nuevosDatos) {
-        for (int i = 0; i < nuevosDatos.size(); i ++) {
-            if (i < ejercicio.getPelota().size()){
-                this.updatePelota(ejercicio.getPelota().get(i).getId(), nuevosDatos.get(i));
-            } else {
-                this.createPelotasRestantes(nuevosDatos.get(i), ejercicio);
-
-            }
-        }
-        if (nuevosDatos.size() < ejercicio.getPelota().size()){
-            for(int i = nuevosDatos.size(); i < ejercicio.getPelota().size(); i++) {
-                ejercicio.getPelota().remove(ejercicio.getPelota().get(i));
-            }
-        }
-    }
+//    @Override
+//    public Pelota createPelotasRestantes(PelotaDto request, Ejercicio ejercicio) {
+//
+//        if (request == null || ejercicio == null) {
+//            return null;
+//        }
+//
+//        Pelota pelota = Pelota.builder()
+//                .x(request.getX())
+//                .y(request.getY())
+//                .ejercicio(ejercicio)
+//                .build();
+//
+//        return repository.save(pelota);
+//    }
+//
+//    @Override
+//    public Pelota updatePelota(Long pelotaId, PelotaDto updateRequest) {
+//        Pelota pelota = repository.getById(pelotaId);
+//        if (pelota != null) {
+//            pelota.update(updateRequest);
+//            repository.save(pelota);
+//            return pelota;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public void updateElement(Ejercicio ejercicio, List<PelotaDto> nuevosDatos) {
+//        for (int i = 0; i < nuevosDatos.size(); i ++) {
+//            if (i < ejercicio.getPelota().size()){
+//                this.updatePelota(ejercicio.getPelota().get(i).getId(), nuevosDatos.get(i));
+//            } else {
+//                this.createPelotasRestantes(nuevosDatos.get(i), ejercicio);
+//
+//            }
+//        }
+//        if (nuevosDatos.size() < ejercicio.getPelota().size()){
+//            for(int i = nuevosDatos.size(); i < ejercicio.getPelota().size(); i++) {
+//                ejercicio.getPelota().remove(ejercicio.getPelota().get(i));
+//            }
+//        }
+//    }
 }

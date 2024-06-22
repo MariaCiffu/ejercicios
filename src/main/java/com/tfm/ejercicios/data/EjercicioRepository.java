@@ -47,4 +47,8 @@ public class EjercicioRepository {
         return repository.findAll(spec);
     }
 
+    public Ejercicio saveAndFlush(Ejercicio ejercicio) {
+        return repository.saveAndFlush(ejercicio);
+    }
+
 }

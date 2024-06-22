@@ -20,49 +20,49 @@ public class JugadorAzulServiceImpl implements JugadorAzulService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Override
-    public JugadorAzul createJugadoresAzulesRestantes(JugadorAzulDto request, Ejercicio ejercicio) {
-
-        if (request == null || ejercicio == null) {
-            return null;
-        }
-
-        JugadorAzul jugadorAzul = JugadorAzul.builder()
-                .nombre(request.getNombre())
-                .x(request.getX())
-                .y(request.getY())
-                .ejercicio(ejercicio)
-                .build();
-
-        return repository.save(jugadorAzul);
-    }
-
-    @Override
-    public JugadorAzul updateJugadorAzul(Long jugadorAzulId, JugadorAzulDto updateRequest) {
-        JugadorAzul jugadorAzul = repository.getById(jugadorAzulId);
-        if (jugadorAzul != null) {
-            jugadorAzul.update(updateRequest);
-            repository.save(jugadorAzul);
-            return jugadorAzul;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void updateElement(Ejercicio ejercicio, List<JugadorAzulDto> nuevosDatos) {
-        for (int i = 0; i < nuevosDatos.size(); i ++) {
-            if (i < ejercicio.getJugadorAzul().size()){
-                this.updateJugadorAzul(ejercicio.getJugadorAzul().get(i).getId(), nuevosDatos.get(i));
-            } else {
-                this.createJugadoresAzulesRestantes(nuevosDatos.get(i), ejercicio);
-
-            }
-        }
-        if (nuevosDatos.size() < ejercicio.getJugadorAzul().size()){
-            for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAzul().size(); i++) {
-                ejercicio.getJugadorAzul().remove(ejercicio.getJugadorAzul().get(i));
-            }
-        }
-    }
+//    @Override
+//    public JugadorAzul createJugadoresAzulesRestantes(JugadorAzulDto request, Ejercicio ejercicio) {
+//
+//        if (request == null || ejercicio == null) {
+//            return null;
+//        }
+//
+//        JugadorAzul jugadorAzul = JugadorAzul.builder()
+//                .nombre(request.getNombre())
+//                .x(request.getX())
+//                .y(request.getY())
+//                .ejercicio(ejercicio)
+//                .build();
+//
+//        return repository.save(jugadorAzul);
+//    }
+//
+//    @Override
+//    public JugadorAzul updateJugadorAzul(Long jugadorAzulId, JugadorAzulDto updateRequest) {
+//        JugadorAzul jugadorAzul = repository.getById(jugadorAzulId);
+//        if (jugadorAzul != null) {
+//            jugadorAzul.update(updateRequest);
+//            repository.save(jugadorAzul);
+//            return jugadorAzul;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public void updateElement(Ejercicio ejercicio, List<JugadorAzulDto> nuevosDatos) {
+//        for (int i = 0; i < nuevosDatos.size(); i ++) {
+//            if (i < ejercicio.getJugadorAzul().size()){
+//                this.updateJugadorAzul(ejercicio.getJugadorAzul().get(i).getId(), nuevosDatos.get(i));
+//            } else {
+//                this.createJugadoresAzulesRestantes(nuevosDatos.get(i), ejercicio);
+//
+//            }
+//        }
+//        if (nuevosDatos.size() < ejercicio.getJugadorAzul().size()){
+//            for(int i = nuevosDatos.size(); i < ejercicio.getJugadorAzul().size(); i++) {
+//                ejercicio.getJugadorAzul().remove(ejercicio.getJugadorAzul().get(i));
+//            }
+//        }
+//    }
 }

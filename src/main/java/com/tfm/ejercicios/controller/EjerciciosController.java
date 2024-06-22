@@ -2,6 +2,7 @@ package com.tfm.ejercicios.controller;
 
 import com.tfm.ejercicios.model.pojo.*;
 import com.tfm.ejercicios.model.request.CreateEjercicioRequest;
+import com.tfm.ejercicios.model.response.EjercicioResponse;
 import com.tfm.ejercicios.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,7 +49,7 @@ public class EjerciciosController {
     @ApiResponse(
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ejercicio.class)))
-    public ResponseEntity<List<Ejercicio>> getEjercicios(
+    public ResponseEntity<List<EjercicioResponse>> getEjercicios(
             @RequestHeader Map<String, String> headers,
             @Parameter(name = "nombre", description = "Nombre del ejercicio", required = false)
             @RequestParam(required = false) String nombre,
@@ -58,7 +59,7 @@ public class EjerciciosController {
             @RequestParam(required = false) String objetivo) {
 
         log.info("headers: {}", headers);
-        List<Ejercicio> ejercicios = service.getEjercicios(nombre, tipo, objetivo);
+        List<EjercicioResponse> ejercicios = service.getEjercicios(nombre, tipo, objetivo);
 
         if (ejercicios != null) {
             return ResponseEntity.ok(ejercicios);
@@ -79,10 +80,10 @@ public class EjerciciosController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "No se ha encontrado el miembro con el identificador indicado.")
-    public ResponseEntity<Ejercicio> getEjercicio(@PathVariable String ejercicioId) {
+    public ResponseEntity<EjercicioResponse> getEjercicio(@PathVariable String ejercicioId) {
 
         log.info("Request received for exercise {}", ejercicioId);
-        Ejercicio ejercicio = service.getEjercicio(ejercicioId);
+        EjercicioResponse ejercicio = service.getEjercicio(ejercicioId);
 
         if (ejercicio != null) {
             return ResponseEntity.ok(ejercicio);
@@ -130,9 +131,9 @@ public class EjerciciosController {
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "Datos incorrectos introducidos.")
-    public ResponseEntity<Ejercicio> addEjercicio(@RequestBody CreateEjercicioRequest request) {
+    public ResponseEntity<EjercicioResponse> addEjercicio(@RequestBody CreateEjercicioRequest request) {
 
-        Ejercicio createdEjercicio = service.createEjercicio(request);
+        EjercicioResponse createdEjercicio = service.createEjercicio(request);
 
         if (createdEjercicio != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdEjercicio);
@@ -157,46 +158,10 @@ public class EjerciciosController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "Ejercicio no encontrado.")
-    public ResponseEntity<Ejercicio> updateEjercicio(@PathVariable String ejercicioId, @RequestBody EjercicioDto body) {
-
-        Ejercicio ejercicio = service.getEjercicio(ejercicioId);
-
-        //Jugador amarillo
-        if (ejercicio != null && body.getJugadorAmarillo() != null) {
-            serviceJugadorAmarillo.updateElement(ejercicio, body.getJugadorAmarillo());
-        }
-        //Jugador rojo
-        if (ejercicio != null && body.getJugadorRojo() != null) {
-            serviceJugadorRojo.updateElement(ejercicio, body.getJugadorRojo());
-        }
-
-        //Jugador rosa
-        if (ejercicio != null && body.getJugadorRosa() != null) {
-            serviceJugadorRosa.updateElement(ejercicio, body.getJugadorRosa());
-        }
-
-        //Jugador azul
-        if (ejercicio != null && body.getJugadorAzul() != null) {
-            serviceJugadorAzul.updateElement(ejercicio, body.getJugadorAzul());
-        }
-
-        //Pelota
-        if (ejercicio != null && body.getPelota() != null) {
-            servicePelota.updateElement(ejercicio, body.getPelota());
-        }
-
-        //Cono
-        if (ejercicio != null && body.getCono() != null) {
-            serviceCono.updateElement(ejercicio, body.getCono());
-        }
-
-        //Cono alto
-        if (ejercicio != null && body.getConoAlto() != null) {
-            serviceConoAlto.updateElement(ejercicio, body.getConoAlto());
-        }
+    public ResponseEntity<EjercicioResponse> updateEjercicio(@PathVariable String ejercicioId, @RequestBody CreateEjercicioRequest body) {
 
         //Ejercicio
-        Ejercicio updatedEjercicio = service.updateEjercicio(ejercicioId, body);
+        EjercicioResponse updatedEjercicio = service.updateEjercicio(ejercicioId, body);
 
         if (updatedEjercicio != null) {
             return ResponseEntity.ok(updatedEjercicio);
@@ -204,5 +169,4 @@ public class EjerciciosController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

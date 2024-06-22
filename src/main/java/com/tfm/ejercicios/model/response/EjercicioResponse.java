@@ -1,25 +1,24 @@
-package com.tfm.ejercicios.model.pojo;
+package com.tfm.ejercicios.model.response;
 
-import com.tfm.ejercicios.model.request.CreateDatoPizarraRequest;
+import com.tfm.ejercicios.model.pojo.Ejercicio;
 import lombok.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-public class EjercicioDto {
+public class EjercicioResponse {
+    private Long id;
 
     private String imagen;
 
     private String nombre;
 
-    private String tipo;
+    private String tipoEj;
 
     private String objetivo;
 
@@ -29,6 +28,6 @@ public class EjercicioDto {
 
     private String descripcion;
 
-    private Map<String, List<DatoPizarraDto>> datosPizarra;
-
+    // Estructura para contener los diferentes tipos de DatoPizarra
+    private Map<String, List<DatoPizarraResponse>> datosPizarra;
 }
