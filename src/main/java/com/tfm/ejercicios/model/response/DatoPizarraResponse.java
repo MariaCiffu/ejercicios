@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,4 +17,5 @@ public class DatoPizarraResponse {
     private Double x;
     private Double y;
     private String nombre;
+    private List<Double> puntos;
 }

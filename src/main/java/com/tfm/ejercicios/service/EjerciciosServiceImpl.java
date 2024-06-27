@@ -202,6 +202,13 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                             .ejercicio(ejercicio)
                             .build();
                     datosPizarra.add(porteria);
+                } else if (("lineasRectas").equals(entry.getKey())) {
+                    LineaRecta lineaRecta = LineaRecta.builder()
+                            .idRef(datoReq.getIdRef())
+                            .puntos(datoReq.getPuntos())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(lineaRecta);
                 }
 
             }
@@ -277,6 +284,10 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                 datosPizarraMap.computeIfAbsent("escaleras", k -> new ArrayList<>()).add(datoResponse);
             } else if (dato instanceof Porteria) {
                 datosPizarraMap.computeIfAbsent("porterias", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof LineaRecta) {
+                LineaRecta lineaRecta = (LineaRecta) dato;
+                datoResponse.setPuntos(lineaRecta.getPuntos());
+                datosPizarraMap.computeIfAbsent("lineasRectas", k -> new ArrayList<>()).add(datoResponse);
             }
         }
 
