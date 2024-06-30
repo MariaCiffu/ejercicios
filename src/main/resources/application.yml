@@ -11,6 +11,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
   h2:
     console:
       enabled: true
@@ -20,7 +24,7 @@ spring:
 
 ## Configuracion de Instancia
 server:
-  port: 8090
+  port: ${PORT:8090}
 
 ## Configuracion del cliente de Eureka
 eureka:
@@ -29,6 +33,6 @@ eureka:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
-    hostname: ms-ejercicios
+    hostname: ${HOSTNAME:localhost}
 
 
