@@ -40,7 +40,7 @@ public class Ejercicio {
     @Column(name = "unidades_duracion")
     private String unidadesDuracion;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @OneToMany(mappedBy = "ejercicio", cascade = CascadeType.ALL, orphanRemoval = true)
