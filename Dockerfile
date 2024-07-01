@@ -22,7 +22,7 @@ RUN mvn clean package
 
 # Segunda etapa: Ejecución de la aplicación
 FROM openjdk:17
-EXPOSE 8088
+EXPOSE 8090
 
 # Declarar variables de entorno necesarias para la ejecución
 ENV DB_URL=${DB_URL}
