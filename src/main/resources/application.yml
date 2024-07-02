@@ -3,7 +3,7 @@ spring:
   application:
     name: ms-ejercicios
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/itataki_manager_db?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false} #Actualizar con el valor de tu despliegue local de MySQL.
+    url: ${DB_URL:jdbc:mysql://localhost:3306/itataki_manager_db} #Actualizar con el valor de tu despliegue local de MySQL.
     driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
     username: ${DB_USER:root} #Actualizar con el valor de tu usuario.
     password: ${DB_PASSWORD:rootmaster} #Actualizar con el valor de tu contrase?a de root.
