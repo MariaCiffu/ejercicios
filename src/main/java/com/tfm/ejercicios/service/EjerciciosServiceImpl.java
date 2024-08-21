@@ -209,6 +209,15 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                             .ejercicio(ejercicio)
                             .build();
                     datosPizarra.add(lineaRecta);
+                }else if (("textos").equals(entry.getKey())) {
+                    Texto texto = Texto.builder()
+                            .x(datoReq.getX())
+                            .y(datoReq.getY())
+                            .idRef(datoReq.getIdRef())
+                            .nombre(datoReq.getNombre())
+                            .ejercicio(ejercicio)
+                            .build();
+                    datosPizarra.add(texto);
                 }
 
             }
@@ -244,6 +253,7 @@ public class EjerciciosServiceImpl implements EjerciciosService {
         datosPizarraMap.put("escaleras", new ArrayList<>());
         datosPizarraMap.put("porterias", new ArrayList<>());
         datosPizarraMap.put("lineasRectas", new ArrayList<>());
+        datosPizarraMap.put("textos", new ArrayList<>());
 
         // Llenar la estructura de datos con los objetos de 'DatoPizarra'
         for (DatoPizarra dato : ejercicio.getDatoPizarra()) {
@@ -288,6 +298,10 @@ public class EjerciciosServiceImpl implements EjerciciosService {
                 LineaRecta lineaRecta = (LineaRecta) dato;
                 datoResponse.setPuntos(lineaRecta.getPuntos());
                 datosPizarraMap.computeIfAbsent("lineasRectas", k -> new ArrayList<>()).add(datoResponse);
+            } else if (dato instanceof Texto) {
+                Texto texto = (Texto) dato;
+                datoResponse.setNombre(texto.getNombre());
+                datosPizarraMap.computeIfAbsent("textos", k -> new ArrayList<>()).add(datoResponse);
             }
         }
 
