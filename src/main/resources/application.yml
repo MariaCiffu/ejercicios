@@ -29,10 +29,18 @@ server:
 ## Configuracion del cliente de Eureka
 eureka:
   client:
+    healthcheck:
+      enabled: false
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
     hostname: ${HOSTNAME:localhost}
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
 
+management:
+  metrics:
+    enable:
+      eureka: false
 
